@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 const DATA_URL =
   "https://raw.githubusercontent.com/managerrojo/COAVANCOL-Prueba-T-cnica-/refs/heads/main/IndexAsociados";
+const estados = ["Todos", "Prospecto", "Expediente en Construcción", "Pendiente Jurídico", "Pendiente Cierre de Crédito"]
 
 app.use(express.json());
 
@@ -38,7 +39,12 @@ app.post('/updateEstadoPipeline', (req: Request, res: Response) => {
     return res.status(404).json({ error: "Asociado not found" });
   }
 
-  asociado.estado_pipeline = update.estado_pipeline;
+  if (!update.nuevoEstado || !estados.includes(update.nuevoEstado)) {
+    return res.status(400).json({ error: "invalid estado" });
+  }
+
+    asociado.estado_pipeline = update.nuevoEstado;
+  console.log(`Asociado modified ${asociado}`)
 
   res.status(200).json({ message: "Status updated", asociado });
 });
