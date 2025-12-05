@@ -16,12 +16,12 @@ const fetchData = async () => {
   try {
     const response = await fetch(DATA_URL);
     if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
+      throw new Error(`Error http: ${response.status}`);
     }
     data = await response.json() as Asociado[];
-    console.log("Loaded data:", data.length);
+    console.log("Datos cargados:", data.length);
   } catch (error) {
-    console.error("Error :", error);
+    console.error("Error:", error);
   }
 };
 
@@ -36,19 +36,19 @@ app.post('/updateEstadoPipeline', (req: Request, res: Response) => {
 
   const asociado = data.find(a => a.id == update.asociadoId);
   if (!asociado) {
-    return res.status(404).json({ error: "Asociado not found" });
+    return res.status(404).json({ error: "Asociado no encontrado" });
   }
 
   if (!update.nuevoEstado || !estados.includes(update.nuevoEstado)) {
-    return res.status(400).json({ error: "invalid estado" });
+    return res.status(400).json({ error: "Estado inválido" });
   }
 
-    asociado.estado_pipeline = update.nuevoEstado;
+  asociado.estado_pipeline = update.nuevoEstado;
   console.log(`Asociado modified ${asociado}`)
 
-  res.status(200).json({ message: "Status updated", asociado });
+  res.status(200).json({ message: "Estado actualizado con éxito", asociado });
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+  console.log(`Servidor escuchando ${port}`);
 });
